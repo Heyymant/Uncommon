@@ -1,0 +1,22 @@
+# Render.com deployment configuration
+# This file enables one-click deployment to Render
+
+services:
+  - type: web
+    name: uncommon-game
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      # Add your AI API key in Render dashboard (optional)
+      # - key: AI_PROVIDER
+      #   value: openai
+      # - key: AI_API_KEY
+      #   sync: false  # Will prompt you to enter this in Render dashboard
+    healthCheckPath: /api/health
+    autoDeploy: true

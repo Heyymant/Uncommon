@@ -1,0 +1,359 @@
+.game-finished {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Trophy Section */
+.trophy-section {
+  text-align: center;
+  padding: 1.25rem 1rem;
+}
+
+.trophy-icon {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--pastel-yellow);
+  border-radius: 50%;
+  margin: 0 auto 12px;
+  color: var(--text-dark);
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.trophy-section h1 {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+}
+
+.winner-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+/* Leaderboard */
+.final-leaderboard {
+  width: 100%;
+  max-width: 400px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: 1.25rem;
+}
+
+.final-leaderboard h3 {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.leaderboard-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: var(--bg-soft);
+  border-radius: var(--radius-md);
+}
+
+.leaderboard-row.winner {
+  background: var(--warning-light);
+}
+
+.leaderboard-row.you {
+  border: 2px solid var(--primary);
+  background: var(--primary-light);
+}
+
+.rank-badge {
+  font-size: 1.25rem;
+  width: 32px;
+  text-align: center;
+}
+
+.player-details {
+  flex: 1;
+}
+
+.player-name {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.you-tag {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-left: 6px;
+}
+
+.score-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 100px;
+}
+
+.score-bar {
+  flex: 1;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.score-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 4px;
+  transition: width 0.8s ease;
+}
+
+.score-value {
+  font-family: var(--font-mono);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--primary);
+  min-width: 40px;
+  text-align: right;
+}
+
+/* Stats */
+.game-stats {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  min-width: 80px;
+}
+
+.stat-value {
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.stat-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+/* History */
+.history-section {
+  width: 100%;
+  max-width: 400px;
+}
+
+.history-toggle {
+  width: 100%;
+  padding: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.history-toggle:hover {
+  background: var(--bg-soft);
+  color: var(--text-primary);
+}
+
+.round-history {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.history-round {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--bg-soft);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.history-letter {
+  color: var(--primary);
+}
+
+.history-scores {
+  padding: 8px 12px;
+}
+
+.history-score-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.history-score-item span:last-child {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--success);
+}
+
+/* Actions */
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.play-again-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.play-again-btn:hover {
+  background: var(--accent-hover);
+}
+
+.leave-btn {
+  padding: 10px 20px;
+  background: transparent;
+  border: 1px solid var(--border-medium);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.leave-btn:hover {
+  border-color: var(--error);
+  color: var(--error);
+  background: var(--error-light);
+}
+
+.waiting-text {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.room-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .trophy-section {
+    padding: 1rem 0.5rem;
+  }
+
+  .trophy-icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .trophy-section h1 {
+    font-size: 1.5rem;
+  }
+
+  .game-stats {
+    width: 100%;
+  }
+
+  .stat-card {
+    flex: 1;
+    min-width: 70px;
+    padding: 10px 12px;
+  }
+
+  .score-section {
+    flex-direction: column;
+    gap: 6px;
+    min-width: auto;
+  }
+
+  .score-bar {
+    width: 100%;
+  }
+}
+
+@media (max-width: 400px) {
+  .leaderboard-row {
+    padding: 10px;
+  }
+  
+  .rank-badge {
+    font-size: 1.1rem;
+    width: 28px;
+  }
+  
+  .score-value {
+    font-size: 1rem;
+  }
+}
