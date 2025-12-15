@@ -129,9 +129,26 @@
   color: var(--text-primary);
 }
 
-.leave-btn:hover {
+.leave-btn:hover:not(.disabled) {
   background: var(--error-light);
   color: var(--error);
+}
+
+.leave-btn.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.game-active-indicator {
+  font-size: 0.75rem;
+  color: var(--warning);
+  margin-left: 4px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
 /* Connection Panel */

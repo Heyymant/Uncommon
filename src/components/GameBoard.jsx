@@ -30,42 +30,72 @@ function GameBoard({ socket, room, playerName, isHost, gameState, onLeaveRoom })
   }
 
   // Game Header Component
-  const GameHeader = () => (
-    <div className="game-header">
-      <div className="header-left">
-        <span className="room-badge">{localRoom.id}</span>
-        <span className="player-count">
-          <IconUsers size={14} />
-          {localRoom.players.length}
-        </span>
-      </div>
-      <div className="header-center">
-        {(localRoom.gameState === 'playing' || localRoom.gameState === 'voting' || localRoom.gameState === 'review') && (
-          <div className="round-progress">
-            {[1, 2, 3].map(r => (
-              <div 
-                key={r} 
-                className={`progress-dot ${r < localRoom.currentRound ? 'completed' : ''} ${r === localRoom.currentRound ? 'active' : ''}`}
-              >
-                {r}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-      <div className="header-right">
-        {isHost && (
-          <span className="host-indicator">
-            <IconCrown size={14} />
-            Host
+  const GameHeader = () => {
+    // Determine if leaving is allowed (only in safe states)
+    const canLeave = localRoom.gameState === 'lobby' || 
+                    localRoom.gameState === 'review' || 
+                    localRoom.gameState === 'finished';
+    const isActiveGameplay = localRoom.gameState === 'playing' || localRoom.gameState === 'voting';
+    
+    const handleLeaveClick = () => {
+      if (isActiveGameplay) {
+        const confirmLeave = window.confirm(
+          '⚠️ Game in progress!\n\nLeaving now will disconnect you from the active round.\n\nAre you sure you want to leave?'
+        );
+        if (!confirmLeave) {
+          return;
+        }
+      }
+      onLeaveRoom();
+    };
+
+    return (
+      <div className="game-header">
+        <div className="header-left">
+          <span className="room-badge">{localRoom.id}</span>
+          <span className="player-count">
+            <IconUsers size={14} />
+            {localRoom.players.length}
           </span>
-        )}
-        <button className="leave-btn" onClick={onLeaveRoom} title="Leave Room">
-          <IconX size={18} />
-        </button>
+        </div>
+        <div className="header-center">
+          {(localRoom.gameState === 'playing' || localRoom.gameState === 'voting' || localRoom.gameState === 'review') && (
+            <div className="round-progress">
+              {[1, 2, 3].map(r => (
+                <div 
+                  key={r} 
+                  className={`progress-dot ${r < localRoom.currentRound ? 'completed' : ''} ${r === localRoom.currentRound ? 'active' : ''}`}
+                >
+                  {r}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        <div className="header-right">
+          {isHost && (
+            <span className="host-indicator">
+              <IconCrown size={14} />
+              Host
+            </span>
+          )}
+          <button 
+            className={`leave-btn ${isActiveGameplay ? 'disabled' : ''}`} 
+            onClick={handleLeaveClick} 
+            title={isActiveGameplay ? 'Cannot leave during active gameplay' : 'Leave Room'}
+            disabled={false} // Always allow click, but show confirmation
+          >
+            <IconX size={18} />
+          </button>
+          {isActiveGameplay && (
+            <span className="game-active-indicator" title="Game in progress - leaving will disconnect you">
+              ⚠️
+            </span>
+          )}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   // Host Prompt Selection Screen
   if (isHost && localRoom.gameState === 'lobby' && localRoom.prompts.length === 0) {

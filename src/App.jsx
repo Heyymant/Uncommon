@@ -45,8 +45,11 @@ function App() {
   useEffect(() => {
     const newSocket = io(SERVER_URL, {
       reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000
+      reconnectionAttempts: 10, // More attempts during active gameplay
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      timeout: 20000,
+      forceNew: false
     });
 
     newSocket.on('connect', () => {
@@ -54,9 +57,41 @@ function App() {
       setConnectionStatus('connected');
     });
 
-    newSocket.on('disconnect', () => {
-      console.log('Disconnected from server');
-      setConnectionStatus('disconnected');
+    newSocket.on('disconnect', (reason) => {
+      console.log('Disconnected from server:', reason);
+      
+      // If game is active, try to reconnect
+      if (room && (room.gameState === 'playing' || room.gameState === 'voting')) {
+        setConnectionStatus('disconnected');
+        // Socket.io will automatically try to reconnect
+        showNotification('Connection lost. Attempting to reconnect...', 'warning');
+      } else {
+        setConnectionStatus('disconnected');
+      }
+    });
+    
+    newSocket.on('reconnect', (attemptNumber) => {
+      console.log('Reconnected after', attemptNumber, 'attempts');
+      if (room) {
+        setConnectionStatus('connected');
+        showNotification('Reconnected successfully!', 'success');
+        // Rejoin the room if we were in one
+        if (room.id && playerName) {
+          newSocket.emit('join-room', { roomId: room.id, playerName: playerName });
+        }
+      }
+    });
+    
+    newSocket.on('reconnect_error', (error) => {
+      console.log('Reconnection error:', error);
+      showNotification('Reconnection failed. Please refresh the page.', 'error');
+    });
+    
+    newSocket.on('reconnect_attempt', (attemptNumber) => {
+      console.log('Reconnection attempt', attemptNumber);
+      if (room && (room.gameState === 'playing' || room.gameState === 'voting')) {
+        showNotification(`Reconnecting... (Attempt ${attemptNumber})`, 'warning');
+      }
     });
 
     newSocket.on('connect_error', () => {
@@ -173,6 +208,16 @@ function App() {
   };
 
   const handleLeaveRoom = () => {
+    // Prevent leaving during active gameplay
+    if (room && (room.gameState === 'playing' || room.gameState === 'voting')) {
+      const confirmLeave = window.confirm(
+        '⚠️ Game in progress!\n\nLeaving now will disconnect you from the game.\n\nAre you sure you want to leave?'
+      );
+      if (!confirmLeave) {
+        return;
+      }
+    }
+    
     if (socket) {
       socket.emit('leave-room');
       setRoom(null);
@@ -180,6 +225,20 @@ function App() {
       setIsHost(false);
     }
   };
+
+  // Prevent browser tab/window close during active gameplay
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (room && (room.gameState === 'playing' || room.gameState === 'voting')) {
+        e.preventDefault();
+        e.returnValue = 'Game is in progress! Are you sure you want to leave?';
+        return e.returnValue;
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [room]);
 
   // Connection status overlay
   if (connectionStatus === 'connecting') {

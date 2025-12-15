@@ -32,13 +32,19 @@
 /* Round Header */
 .round-header {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
   padding: 1rem 1.25rem;
   background: var(--bg-card);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-lg);
   margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.round-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 1rem;
 }
 
@@ -155,6 +161,36 @@
 
 .timer.critical .timer-value {
   color: var(--error);
+}
+
+/* Game Active Warning */
+.game-active-warning {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: var(--warning-light);
+  border: 1px solid var(--warning);
+  border-radius: var(--radius-md);
+  margin-top: 8px;
+  width: 100%;
+  justify-content: center;
+}
+
+.warning-icon {
+  font-size: 0.9rem;
+  animation: pulse 2s infinite;
+}
+
+.warning-text {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--warning);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
 }
 
 /* Prompts Section */
@@ -452,9 +488,13 @@
 /* Responsive */
 @media (max-width: 600px) {
   .round-header {
-    flex-direction: column;
     gap: 0.75rem;
     padding: 1rem;
+  }
+  
+  .round-header-top {
+    flex-direction: column;
+    gap: 0.75rem;
   }
 
   .letter-box {
@@ -483,6 +523,14 @@
 
   .submit-button {
     width: 100%;
+  }
+  
+  .game-active-warning {
+    padding: 6px 10px;
+  }
+  
+  .warning-text {
+    font-size: 0.7rem;
   }
 }
 
