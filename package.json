@@ -11,6 +11,8 @@
     "dev": "concurrently \"vite\" \"node server/index.js\"",
     "dev:client": "vite",
     "dev:server": "node server/index.js",
+    "free-ports": "powershell -ExecutionPolicy Bypass -File ./free-ports.ps1",
+    "dev:clean": "npm run free-ports && npm run dev",
     "build": "vite build",
     "preview": "vite preview",
     "start": "node server/index.js",

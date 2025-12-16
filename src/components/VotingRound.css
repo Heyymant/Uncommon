@@ -29,20 +29,20 @@
 
 .voting-title h2 {
   font-family: var(--font-display);
-  font-size: 1.15rem;
+  font-size: 1.3rem;  /* Increased from 1.15rem */
   font-weight: 600;
   color: var(--text-dark);
   margin-bottom: 2px;
 }
 
 .voting-title p {
-  font-size: 0.85rem;
+  font-size: 0.95rem;  /* Increased from 0.85rem */
   color: var(--text-secondary);
   margin: 0;
 }
 
 .letter-badge {
-  font-size: 0.9rem;
+  font-size: 1rem;  /* Increased from 0.9rem */
   color: var(--text-secondary);
   background: var(--bg-soft);
   padding: 10px 14px;
@@ -55,7 +55,7 @@
 
 .letter-badge span {
   color: var(--primary);
-  font-size: 1.2rem;
+  font-size: 1.35rem;  /* Increased from 1.2rem */
   font-weight: 700;
   margin-left: 4px;
 }
@@ -76,7 +76,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 0.8rem;
+  font-size: 0.9rem;  /* Increased from 0.8rem */
   font-weight: 500;
   color: var(--text-secondary);
 }
@@ -155,7 +155,7 @@
 
 .prompt-number {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.85rem;  /* Increased from 0.75rem */
   font-weight: 600;
   color: var(--primary);
   background: var(--primary-light);
@@ -168,7 +168,7 @@
 }
 
 .prompt-text {
-  font-size: 0.9rem;
+  font-size: 1rem;  /* Increased from 0.9rem */
   color: var(--text-dark);
 }
 
@@ -215,7 +215,7 @@
 }
 
 .answer-player {
-  font-size: 0.7rem;
+  font-size: 0.8rem;  /* Increased from 0.7rem */
   color: var(--text-muted);
   display: flex;
   align-items: center;
@@ -233,7 +233,7 @@
 
 .answer-word {
   font-family: var(--font-display);
-  font-size: 1.1rem;
+  font-size: 1.2rem;  /* Increased from 1.1rem */
   font-weight: 600;
   color: var(--text-dark);
 }

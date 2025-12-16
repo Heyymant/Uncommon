@@ -60,7 +60,7 @@
 
 .game-logo h1 {
   font-family: var(--font-display);
-  font-size: 1.8rem;
+  font-size: 2rem;  /* Increased from 1.8rem */
   font-weight: normal;
   color: var(--text-dark);
   letter-spacing: 3px;
@@ -72,7 +72,7 @@
 
 .game-tagline {
   color: var(--text-secondary);
-  font-size: 1rem;
+  font-size: 1.1rem;  /* Increased from 1rem */
   font-weight: 500;
 }
 

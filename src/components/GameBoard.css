@@ -43,7 +43,7 @@
 
 .room-badge {
   font-family: var(--font-display);
-  font-size: 0.7rem;
+  font-size: 0.8rem;  /* Increased from 0.7rem */
   font-weight: normal;
   color: var(--bg-card);
   background: var(--primary);  /* Nintendo Red */
@@ -62,7 +62,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 0.85rem;
+  font-size: 0.95rem;  /* Increased from 0.85rem */
   color: var(--text-secondary);
 }
 
@@ -90,7 +90,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-display);
-  font-size: 0.7rem;
+  font-size: 0.8rem;  /* Increased from 0.7rem */
   font-weight: normal;
   background: var(--bg-soft);
   color: var(--text-muted);
@@ -196,7 +196,7 @@
 
 .connection-card h3 {
   font-family: var(--font-display);
-  font-size: 0.9rem;
+  font-size: 1rem;  /* Increased from 0.9rem */
   font-weight: 600;
   color: var(--text-dark);
   margin-bottom: 1rem;
@@ -232,7 +232,7 @@
 .connection-value code {
   flex: 1;
   font-family: var(--font-mono);
-  font-size: 0.85rem;
+  font-size: 0.95rem;  /* Increased from 0.85rem */
   font-weight: 600;
   color: var(--primary);
   background: var(--bg-soft);
@@ -325,7 +325,7 @@
 
 .waiting-screen h2 {
   font-family: var(--font-display);
-  font-size: 1.35rem;
+  font-size: 1.5rem;  /* Increased from 1.35rem */
   font-weight: 600;
   color: var(--text-dark);
   margin-bottom: 6px;
@@ -378,7 +378,7 @@
 
 .info-value {
   font-family: var(--font-display);
-  font-size: 1.25rem;
+  font-size: 1.4rem;  /* Increased from 1.25rem */
   font-weight: 700;
   color: var(--primary);
 }
@@ -428,7 +428,7 @@
 }
 
 .player-name {
-  font-size: 0.85rem;
+  font-size: 0.95rem;  /* Increased from 0.85rem */
   font-weight: 500;
   color: var(--text-dark);
 }

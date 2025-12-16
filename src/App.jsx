@@ -17,10 +17,21 @@ const getServerUrl = () => {
     return window.location.origin;
   }
   
-  // Development: use localhost backend
+  // Development: detect if we're on the same port as backend
+  const currentPort = window.location.port;
   const hostname = window.location.hostname;
+  
+  // If Vite is on port 3001 (same as backend), use direct connection
+  // Otherwise, use proxy (Vite will proxy /socket.io to backend)
+  if (currentPort === '3001') {
+    // Vite is on 3001, backend is also on 3001 - use direct connection
+    return window.location.origin;
+  }
+  
+  // Vite is on 3000 (or other port), use proxy or direct backend
   if (hostname === 'localhost' || hostname === '127.0.0.1') {
-    return 'http://localhost:3001';
+    // Use proxy if available, otherwise direct
+    return currentPort === '3000' ? window.location.origin : 'http://localhost:3001';
   }
   return `http://${hostname}:3001`;
 };
