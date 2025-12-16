@@ -184,9 +184,9 @@ function startVotingPhase(room, roomId) {
           word: sub.words[promptIndex], // Keep original case
           wordLower: word
         });
-        // Initialize votes - auto-accept from the player who submitted
+        // Initialize votes - no auto-votes, players vote on all answers
         room.votes[answerId] = { 
-          accept: [sub.playerId], // Self-vote as accept
+          accept: [],
           reject: [] 
         };
       }
@@ -223,8 +223,6 @@ function finalizeVotesAndScore(room) {
     
     submissions.forEach(sub => {
       const word = (sub.words[promptIndex] || '').toLowerCase().trim();
-      if (!word || !word.startsWith(letter)) return;
-      
       const answerId = `${sub.playerId}-${promptIndex}`;
       const voteData = room.votes[answerId] || { accept: [], reject: [] };
       
@@ -232,32 +230,36 @@ function finalizeVotesAndScore(room) {
       const acceptCount = voteData.accept.length;
       const rejectCount = voteData.reject.length;
       
-      // Accept if: more accepts than rejects, OR no rejections and at least one accept
-      const isAccepted = acceptCount > rejectCount || (rejectCount === 0 && acceptCount >= 1);
+      // Empty or invalid words (don't start with letter) are automatically rejected
+      const isValidWord = word && word.startsWith(letter);
+      const isAccepted = isValidWord && (acceptCount > rejectCount || (rejectCount === 0 && acceptCount >= 1));
       
-      if (isAccepted) {
+      // Only add valid accepted words to the list for duplicate checking
+      if (isAccepted && isValidWord) {
         acceptedWordsPerPrompt.get(promptIndex).push({
           playerId: sub.playerId,
           word: word
         });
       }
       
-      // Store vote result
+      // Store vote result for all answers (including empty/invalid)
       if (!room.voteResults) room.voteResults = {};
       room.voteResults[answerId] = {
         accepted: isAccepted,
         acceptCount,
         rejectCount,
-        totalVoters
+        totalVoters,
+        isEmpty: !word,
+        isInvalid: word && !word.startsWith(letter)
       };
     });
   });
   
-  // Second pass: award points (unique accepted words only)
+  // Second pass: handle duplicates and award points
   room.prompts.forEach((prompt, promptIndex) => {
     const acceptedWords = acceptedWordsPerPrompt.get(promptIndex);
     
-    // Count word occurrences
+    // Count word occurrences to identify duplicates
     const wordCounts = new Map();
     acceptedWords.forEach(({ word, playerId }) => {
       if (!wordCounts.has(word)) {
@@ -266,10 +268,21 @@ function finalizeVotesAndScore(room) {
       wordCounts.get(word).push(playerId);
     });
     
-    // Award points for unique words
-    wordCounts.forEach((playerIds, word) => {
-      if (playerIds.length === 1) {
-        const player = room.players.find(p => p.id === playerIds[0]);
+    // Process each accepted word
+    acceptedWords.forEach(({ word, playerId }) => {
+      const answerId = `${playerId}-${promptIndex}`;
+      const occurrences = wordCounts.get(word);
+      const isDuplicate = occurrences.length > 1;
+      
+      // Update vote result to mark duplicates as rejected
+      if (isDuplicate && room.voteResults[answerId]) {
+        room.voteResults[answerId].accepted = false;
+        room.voteResults[answerId].isDuplicate = true;
+      }
+      
+      // Award points only for unique words (not duplicates)
+      if (!isDuplicate) {
+        const player = room.players.find(p => p.id === playerId);
         if (player) {
           player.roundScore = (player.roundScore || 0) + 1;
           player.score = (player.score || 0) + 1;

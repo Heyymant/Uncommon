@@ -64,14 +64,20 @@ function ReviewRound({ socket, room, playerName, isHost }) {
   const getVoteResult = (playerId, promptIndex) => {
     const answerId = `${playerId}-${promptIndex}`;
     const result = room.voteResults?.[answerId];
-    if (!result) return { accepted: true, acceptCount: 0, rejectCount: 0 };
+    if (!result) return { accepted: true, acceptCount: 0, rejectCount: 0, isDuplicate: false };
     return result;
   };
 
   // Check if answer was accepted by voting
   const isAnswerAccepted = (playerId, promptIndex) => {
     const result = getVoteResult(playerId, promptIndex);
-    return result.accepted;
+    return result.accepted && !result.isDuplicate;
+  };
+
+  // Check if answer is a duplicate
+  const isAnswerDuplicate = (playerId, promptIndex) => {
+    const result = getVoteResult(playerId, promptIndex);
+    return result.isDuplicate === true;
   };
 
   const isLastRound = room.currentRound >= room.gameConfig.rounds;
@@ -97,7 +103,7 @@ function ReviewRound({ socket, room, playerName, isHost }) {
         </div>
         <div className="legend-item duplicate">
           <span className="legend-dot"></span>
-          <span>Duplicate = 0 points</span>
+          <span>Duplicate = 0 points (auto-rejected)</span>
         </div>
         {hasVoting && (
           <div className="legend-item rejected">
@@ -146,12 +152,16 @@ function ReviewRound({ socket, room, playerName, isHost }) {
                   const accepted = isAnswerAccepted(player.id, promptIndex);
                   const voteResult = getVoteResult(player.id, promptIndex);
                   
-                  // Determine status: rejected by votes takes priority
+                  // Determine status: duplicates and rejected votes take priority
+                  const isDuplicate = isAnswerDuplicate(player.id, promptIndex);
                   let statusClass = 'empty';
                   let scoreText = '0';
                   
                   if (answer) {
-                    if (!accepted && hasVoting) {
+                    if (isDuplicate) {
+                      statusClass = 'rejected';
+                      scoreText = '0 (duplicate)';
+                    } else if (!accepted && hasVoting) {
                       statusClass = 'rejected';
                       scoreText = '0 (rejected)';
                     } else if (isUnique && accepted) {
@@ -195,13 +205,33 @@ function ReviewRound({ socket, room, playerName, isHost }) {
                 {room.prompts.map((prompt, i) => {
                   const answer = getPlayerAnswer(player.id, i);
                   const isUnique = isWordUnique(i, answer);
-                  const statusClass = !answer ? 'empty' : isUnique ? 'unique' : 'duplicate';
+                  const accepted = isAnswerAccepted(player.id, i);
+                  const isDuplicate = isAnswerDuplicate(player.id, i);
+                  
+                  let statusClass = 'empty';
+                  let pointsText = '0';
+                  
+                  if (answer) {
+                    if (isDuplicate) {
+                      statusClass = 'rejected';
+                      pointsText = '0 (duplicate)';
+                    } else if (!accepted && hasVoting) {
+                      statusClass = 'rejected';
+                      pointsText = '0 (rejected)';
+                    } else if (isUnique && accepted) {
+                      statusClass = 'unique';
+                      pointsText = '+1';
+                    } else {
+                      statusClass = 'duplicate';
+                      pointsText = '0';
+                    }
+                  }
                   
                   return (
                     <div key={i} className={`player-answer-row ${statusClass}`}>
                       <span className="answer-prompt-text">{prompt}</span>
                       <span className="answer-word">{answer || '—'}</span>
-                      <span className="answer-points">{!answer ? '0' : isUnique ? '+1' : '0'}</span>
+                      <span className="answer-points">{pointsText}</span>
                     </div>
                   );
                 })}

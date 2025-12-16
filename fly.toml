@@ -1,0 +1,50 @@
+# Fly.io configuration for StandOut Game
+# This file configures your app for deployment on Fly.io (free tier, no spin down)
+# 
+# To deploy:
+# 1. Sign up at https://fly.io
+# 2. Run: flyctl launch (first time only)
+# 3. Push to GitHub - automatic deployment via GitHub Actions
+
+app = "standout-game"  # Change this to your unique app name
+primary_region = "iad"  # Change to your preferred region (iad = Washington DC, ord = Chicago, etc.)
+
+[build]
+  builder = "paketobuildpacks/builder:base"
+
+[env]
+  NODE_ENV = "production"
+  PORT = "3001"
+
+[http_service]
+  internal_port = 3001
+  force_https = true
+  auto_stop_machines = false  # Keep machines running (no spin down)
+  auto_start_machines = true
+  min_machines_running = 1    # Always keep 1 machine running
+  processes = ["app"]
+
+  [[http_service.checks]]
+    grace_period = "10s"
+    interval = "30s"
+    method = "GET"
+    timeout = "5s"
+    path = "/api/health"
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 3001
+  processes = ["app"]
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    force_https = true
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+[processes]
+  app = "npm start"
+
